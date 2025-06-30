@@ -223,17 +223,7 @@ body {
     transform: rotate(45deg);
 }
 
-.welcome-message .thought-bubble {
-    background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-dark) 100%);
-    color: white;
-    border-radius: 18px;
-    border: none;
-}
-
-.welcome-message .thought-bubble::before {
-    background: var(--brand-primary);
-    border-color: var(--brand-primary);
-}
+/* Removed welcome message special styling - all messages now consistent */
 
 .message-time {
     font-size: 0.75rem;

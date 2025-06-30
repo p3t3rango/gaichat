@@ -727,16 +727,17 @@ Ready for new wisdom to flow.`;
     }
 
     buildGaiPrompt(feature, userQuestion) {
-        return `You are gäi. Explain this feature clearly and briefly.
+        return `You are gäi explaining a gämi platform feature. This is not your feature - you're helping users understand what gämi offers.
 
-FEATURE: ${feature.description}
+GÄMI PLATFORM FEATURE: ${feature.description}
 
 STYLE:
+- Explain the feature as part of the gämi platform
 - Simple, direct explanation 
 - 1-2 sentences maximum
 - No repetitive openings like "straight to the point" or "[feature name], huh?"
 - Skip unnecessary actions or filler words
-- Just explain what it does and why it's useful
+- Just explain what the feature does and why it's useful
 
 Response:`;
     }

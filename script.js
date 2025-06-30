@@ -275,10 +275,36 @@ class GaiChatbot {
     async generateResponse(userMessage) {
         const message = userMessage.toLowerCase();
         
-        // Use Content Management System for accurate responses
+        // PRIORITY: Handle "what is gämi" with legacy responses (AI was generating garbage)
+        if (this.matchesPattern(message, ['what is gämi', 'what is gami', 'tell me about gämi', 'about gämi', 'what is this platform about?'])) {
+            const responses = [
+                `One platform for creative minds. File storage, messaging, search - no more app juggling.`,
+                
+                `gämi handles the digital chaos so you can focus on creating. Simple as that.`,
+                
+                `All-in-one creative platform. Less tool-switching, more flow.`
+            ];
+            const content = this.getRandomResponse(responses);
+            return this.personality.wrapWithPersonality(content, 'general');
+        }
+        
+        // PRIORITY: Handle file storage questions with legacy responses (AI still broken)
+        if (this.matchesPattern(message, ['file storage', 'files', 'upload', 'storage', 'zip', 'unzip', 'sync', 'download', 'how does file storage work'])) {
+            const responses = [
+                `File storage that doesn't make you question your life choices. Access files on any device, bulk upload, mobile-optimized.`,
+                
+                `Your files, everywhere you need them. Mobile-first upload, bulk handling, seamless sync across devices.`,
+                
+                `File storage like having infinite pockets in your ninja outfit. Upload from mobile, sync instantly.`
+            ];
+            const content = this.getRandomResponse(responses);
+            return this.personality.wrapWithPersonality(content, 'technical');
+        }
+        
+        // Use Content Management System for other features  
         const feature = this.contentManager.findFeature(message);
         
-        if (feature) {
+        if (feature && !this.matchesPattern(message, ['what is gämi', 'what is gami', 'tell me about gämi', 'about gämi', 'file storage', 'files', 'upload', 'storage'])) {
             // Generate dynamic response using AI while maintaining factual accuracy
             return await this.generateDynamicResponse(feature, userMessage);
         }
@@ -286,45 +312,9 @@ class GaiChatbot {
         // Legacy pattern matching (will be phased out)
         // TODO: Remove these when all content is moved to content management system
         
-        if (this.matchesPattern(message, ['what is gämi', 'what is gami', 'tell me about gämi', 'about gämi'])) {
-            const responses = [
-                `gämi is the creative nervous system you've been seeking. An all-in-one cloud platform that eliminates the chaos of app-switching.
+        // Removed duplicate "what is gämi" pattern - now handled at top of function
 
-Think of it as your digital dojo - file storage, tagging, messaging, and search unified in perfect harmony.
-
-No more scattered tools. No more creative friction. Just pure flow.`,
-                
-                `gämi = the end of digital chaos for creative minds.
-
-File storage that doesn't suck. Tagging that actually works. Communication that flows. Search that finds.
-
-One platform. Zero distractions. Maximum creative potential.`
-            ];
-            const content = this.getRandomResponse(responses);
-            return this.personality.wrapWithPersonality(content, 'general', true);
-        }
-
-        if (this.matchesPattern(message, ['file storage', 'files', 'upload', 'storage', 'zip', 'unzip', 'sync', 'download'])) {
-            const responses = [
-                `File storage in gämi is like having infinite pockets in your ninja outfit.
-
-• Store and access across all devices (mobile optimized, obviously)
-• Bulk uploads without the usual digital constipation  
-• Everything synced faster than a shuriken throw
-
-Your files, everywhere you need them. The way it should be.`,
-
-                `File storage without the headaches:
-
-Access your work from anywhere. Upload multiple files like a productivity ninja. Mobile-first design because we're not living in 2010.
-
-No more "which device has that file?" No more upload limits that make you question your life choices.
-
-Simple. Powerful. Ninja-approved.`
-            ];
-            const content = this.getRandomResponse(responses);
-            return this.personality.wrapWithPersonality(content, 'technical');
-        }
+        // Removed duplicate file storage pattern - now handled at top of function
 
         if (this.matchesPattern(message, ['collaboration', 'teamwork', 'share', 'sharing', 'team', 'community folders', 'timestamped', 'notes'])) {
             const responses = [

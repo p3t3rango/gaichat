@@ -27,8 +27,18 @@
     },
     "file_sharing": {
       "title": "File Sharing",
-      "description": "Export audio as shareable videos for social media. Built-in file sharing with enhanced external share link controls for secure collaboration.",
-      "keywords": ["share", "sharing", "export", "social media", "share links", "external sharing"]
+      "description": "Built-in file sharing with enhanced external share link controls for secure collaboration. Control who can access your files with advanced permissions and secure link settings.",
+      "variations": [
+        "Share your work securely with enhanced link controls. Set permissions, control access, and collaborate safely with external share links.",
+        "File sharing that doesn't compromise security. Enhanced external link controls let you decide who can view, download, or edit your shared files.",
+        "Share files with confidence using advanced link permissions. Control access levels and maintain security while collaborating with others."
+      ],
+      "keywords": ["share", "sharing", "how do i share", "share my work", "share links", "external sharing", "permissions", "access control", "secure sharing"]
+    },
+    "audio_export": {
+      "title": "Audio Export for Social Media",
+      "description": "Export audio files as shareable videos optimized for social media platforms. Turn your audio content into visual posts for better social engagement.",
+      "keywords": ["export audio", "audio to video", "social media export", "audio videos", "social posts"]
     },
     "communication": {
       "title": "Communication Suite", 

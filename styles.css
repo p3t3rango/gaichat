@@ -406,6 +406,8 @@ body {
         height: 100dvh; /* Dynamic viewport height for mobile */
         border-left: none;
         border-right: none;
+        display: flex;
+        flex-direction: column;
     }
     
     .message-content {
@@ -414,18 +416,28 @@ body {
     
     .chat-header {
         padding: 1rem;
+        flex-shrink: 0;
     }
     
     .chat-messages {
         padding: 1rem;
+        flex: 1;
+        overflow-y: auto;
         /* Account for mobile keyboard */
         padding-bottom: calc(1rem + env(keyboard-inset-height, 0px));
     }
     
     .chat-input-container {
         padding: 1rem;
+        flex-shrink: 0;
+        background: var(--background-card);
+        border-top: 1px solid var(--border-color);
         /* Ensure input stays above mobile keyboard */
         padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+        /* Ensure it's always visible */
+        position: sticky;
+        bottom: 0;
+        z-index: 10;
     }
     
     #messageInput {
@@ -438,6 +450,11 @@ body {
         user-select: text;
         -webkit-touch-callout: default;
         touch-action: manipulation;
+        /* Ensure proper input behavior on iOS */
+        -webkit-tap-highlight-color: transparent;
+        -webkit-text-size-adjust: 100%;
+        width: 100%;
+        min-height: 44px; /* iOS touch target minimum */
     }
     
     /* Fix for mobile input focus and keyboard */
@@ -445,20 +462,35 @@ body {
         transform: none;
         zoom: 1;
         -webkit-transform: none;
+        outline: none;
+        border-color: var(--brand-primary);
     }
     
     .input-wrapper {
         gap: 0.5rem;
+        align-items: flex-end;
+        width: 100%;
     }
     
     .send-button {
         width: 44px;
         height: 44px;
         flex-shrink: 0;
+        min-height: 44px; /* iOS touch target minimum */
+        touch-action: manipulation;
     }
     
     .quick-actions {
         padding: 1rem 1rem 0.5rem;
+        flex-shrink: 0;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .quick-action {
+        min-height: 44px; /* iOS touch target minimum */
+        white-space: nowrap;
+        flex-shrink: 0;
     }
     
     .ninja-icon {

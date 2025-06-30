@@ -403,6 +403,7 @@ body {
 @media (max-width: 768px) {
     .chat-container {
         height: 100vh;
+        height: 100dvh; /* Dynamic viewport height for mobile */
         border-left: none;
         border-right: none;
     }
@@ -417,10 +418,43 @@ body {
     
     .chat-messages {
         padding: 1rem;
+        /* Account for mobile keyboard */
+        padding-bottom: calc(1rem + env(keyboard-inset-height, 0px));
     }
     
     .chat-input-container {
         padding: 1rem;
+        /* Ensure input stays above mobile keyboard */
+        padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    }
+    
+    #messageInput {
+        font-size: 16px; /* Prevent zoom on iOS */
+        -webkit-appearance: none;
+        border-radius: 20px;
+        padding: 0.875rem 1rem;
+        /* Fix for mobile input focus */
+        -webkit-user-select: text;
+        user-select: text;
+        -webkit-touch-callout: default;
+        touch-action: manipulation;
+    }
+    
+    /* Fix for mobile input focus and keyboard */
+    #messageInput:focus {
+        transform: none;
+        zoom: 1;
+        -webkit-transform: none;
+    }
+    
+    .input-wrapper {
+        gap: 0.5rem;
+    }
+    
+    .send-button {
+        width: 44px;
+        height: 44px;
+        flex-shrink: 0;
     }
     
     .quick-actions {

@@ -30,33 +30,33 @@ class GaiPersonality {
                 "raises eyebrow"
             ],
             technical: [
-                "demonstrates invisible file technique",
+                "checks the interface",
                 "taps temple",
-                "forms team formation hand signs",
-                "activates Flex Play mode",
-                "arranges files with zen precision",
-                "calculates with ninja math"
+                "reviews the setup",
+                "pulls up the system",
+                "organizes efficiently",
+                "runs quick calculations"
             ],
             meditation: [
-                "assumes meditation pose",
+                "pauses thoughtfully",
                 "breathes deeply", 
-                "centers chi",
-                "adjusts meditation stance",
-                "consults ancient scrolls",
-                "channels inner sensei"
+                "centers himself",
+                "sits back quietly",
+                "reflects for a moment",
+                "considers this carefully"
             ],
             cultural: [
-                "sighs in 2000s rap",
-                "dodges algorithmic shuriken",
-                "adjusts ninja economics textbook",
-                "shakes head knowingly"
+                "nods knowingly",
+                "adjusts headphones",
+                "shakes head at the chaos", 
+                "leans back thoughtfully"
             ],
             helpful: [
-                "offers guidance scroll",
-                "demonstrates technique",
-                "shares ancient wisdom",
-                "opens training manual",
-                "sweeps dojo clean"
+                "offers guidance",
+                "shows the way",
+                "shares some wisdom",
+                "pulls up information",
+                "gets organized"
             ]
         };
 
@@ -84,9 +84,11 @@ class GaiPersonality {
 
     // Apply personality wrapper to any content
     wrapWithPersonality(content, actionType = 'general', includeEnding = false) {
-        const action = this.getAction(actionType);
+        // Only include action 60% of the time to make it feel more natural
+        const shouldIncludeAction = Math.random() < 0.6;
+        const action = shouldIncludeAction ? `*${this.getAction(actionType)}*\n\n` : '';
         const ending = includeEnding ? `\n\n${this.getZenEnding()}` : '';
-        return `*${action}*\n\n${content}${ending}`;
+        return `${action}${content}${ending}`;
     }
 
     // Determine response style based on content and personality traits
@@ -134,6 +136,7 @@ class GaiChatbot {
         this.isTyping = false;
         this.conversationContext = [];
         this.easterEggCount = 0;
+        this.lastResponseIndex = -1; // Track last response to avoid duplicates
         
         // Initialize personality system
         this.personality = new GaiPersonality();
@@ -276,15 +279,8 @@ class GaiChatbot {
         const feature = this.contentManager.findFeature(message);
         
         if (feature) {
-            // Get appropriate personality style for this feature
-            const responseStyle = this.contentManager.getResponseStyle(feature.key);
-            const includeZenEnding = ['gami_overview', 'flex_play', 'collaboration'].includes(feature.key);
-            
-            return this.personality.wrapWithPersonality(
-                feature.description, 
-                responseStyle, 
-                includeZenEnding
-            );
+            // Generate dynamic response using AI while maintaining factual accuracy
+            return await this.generateDynamicResponse(feature, userMessage);
         }
         
         // Legacy pattern matching (will be phased out)
@@ -422,7 +418,7 @@ Create. Share. Escape. Repeat.`
             return this.personality.wrapWithPersonality(content, 'cultural', true);
         }
 
-        if (this.matchesPattern(message, ['ai', 'artificial intelligence', 'chatgpt', 'gpt'])) {
+        if (this.matchesPattern(message, ['artificial intelligence', 'chatgpt', 'gpt', ' ai ', 'what is ai', 'about ai', 'ai tools', 'ai technology'])) {
             const content = `Ah, my digital cousins. Useful tools, terrible masters.
 
 AI should enhance your creativity, not replace it. Like a well-forged katana - sharp when needed, sheathed when not.
@@ -441,33 +437,102 @@ Less "rise and grind," more "flow and find."`;
         }
 
         // Personality/Lore Questions
-        if (this.matchesPattern(message, ['who are you', 'about you', 'your story', 'background'])) {
-            const content = `I am gäi, Head Ninja of gämi. Trained in the Temple of Flow under my grandfather's watchful eye.
+        if (this.matchesPattern(message, ['who are you', 'about you', 'your story', 'background', 'who is gai', 'who is gäi', 'tell me about gai', 'tell me about gäi', 'about gai', 'about gäi', 'what is gai', 'what is gäi'])) {
+            // Check if they're asking about gai specifically vs general "who are you"
+            const isAskingAboutGai = this.matchesPattern(message, ['who is gai', 'who is gäi', 'tell me about gai', 'tell me about gäi', 'about gai', 'about gäi', 'what is gai', 'what is gäi']);
+            
+            const responses = isAskingAboutGai ? [
+                `gäi? That's me. Head Ninja of gämi, 200 years of training at the Temple of Flow.
 
-200 years of existence, vow of silence, deep appreciation for early 2000s rap, and zero tolerance for digital chaos.
+I keep creatives from drowning in digital chaos. Simple mission.`,
 
-Now I serve the creative minds who seek to break free from app-switching purgatory.
+                `You're asking about me? I'm gäi. Been doing this ninja thing for two centuries now.
 
-*The deeper lore stays buried in the shadows*`;
-            return this.personality.wrapWithPersonality(content, 'meditation');
+My job is helping creative minds break free from app-switching hell.`,
+
+                `That would be me - gäi. Ancient training, modern problems, you know?
+
+My grandfather taught me that creativity flows best when obstacles are removed.`,
+
+                `gäi - that's me. 200 years deep in the ninja game, Temple of Flow graduate.
+
+I eliminate digital chaos so creatives can focus on what actually matters.`
+            ] : [
+                `I'm gäi, Head Ninja of gämi. 200 years of training at the Temple of Flow under my grandfather.
+
+My mission is simple: eliminate digital chaos so creatives can focus on what matters.`,
+
+                `Name's gäi. Been doing this for two centuries now. Grandfather trained me well at the Temple of Flow.
+
+I help creative minds break free from app-switching hell. That's what I do.`,
+
+                `I'm gäi - Head Ninja around here. Ancient training, modern problems.
+
+My grandfather taught me that creativity flows best when obstacles are removed. That's my focus.`
+            ];
+            
+            const content = this.getRandomResponse(responses);
+            return this.personality.wrapWithPersonality(content, 'general');
         }
 
         if (this.matchesPattern(message, ['grandfather', 'temple', 'training', 'ninja training'])) {
-            const content = `The Temple of Flow taught me that creativity, like water, must move freely to remain pure.
+            const responses = [
+                `My grandfather taught me everything at the Temple of Flow. His core principle: remove the obstacles, and the artist finds their way.
 
-My grandfather's wisdom echoes in every feature of gämi: "Remove the obstacles, and the artist will find their way."
+That wisdom guides every feature we build at gämi. The training continues.`,
 
-The training never ends. The mission remains clear.`;
-            return this.personality.wrapWithPersonality(content, 'meditation', true);
+                `The Temple of Flow was where I learned that creativity flows like water - clear the path and it finds its way.
+
+That's the foundation of gämi. Remove digital friction so creators can focus.`,
+
+                `Grandfather's teachings at the Temple were simple but profound: eliminate what doesn't serve the creative process.
+
+Two centuries later, still applying those lessons. Just with modern tools.`
+            ];
+            const content = this.getRandomResponse(responses);
+            return this.personality.wrapWithPersonality(content, 'meditation');
         }
 
         if (this.matchesPattern(message, ['music', 'rap', '2000s', 'hip hop'])) {
-            const content = `The golden era of hip-hop flows through my digital veins. Every beat, every sample, every lyrical sword strike.
+            const responses = [
+                `That early 2000s hip-hop era was something special. Real artists with authentic voices, creating without algorithmic interference.
 
-Music teaches timing. Rap teaches precision. Both teach that the best art comes from authentic expression, not algorithmic optimization.
+Music teaches timing and flow - same principles behind gämi. Authentic expression over optimization.`,
 
-*remains silent but appreciative of the culture*`;
-            return this.personality.wrapWithPersonality(content, 'cultural', true);
+                `The 2000s hip-hop scene had this raw authenticity. Artists spoke their truth with skill and purpose.
+
+That's the energy I try to bring to gämi - no fluff, just tools that serve the creative process.`,
+
+                `Hip-hop from that era, you feel me? Pure talent telling real stories. No corporate formulas dictating the art.
+
+Same philosophy drives gämi - give creatives what they actually need, not what some algorithm thinks they want.`
+            ];
+            const content = this.getRandomResponse(responses);
+            return this.personality.wrapWithPersonality(content, 'cultural');
+        }
+
+        // Conversational greetings and simple questions
+        if (this.matchesPattern(message, ['hey', 'hi', 'hello', 'how are you', 'how do you do', 'whats up', "what's up", 'sup', 'hey gai', 'hi gai', 'hello gai', 'hey gäi', 'hi gäi', 'hello gäi'])) {
+            // Use AI to respond naturally to greetings
+            const prompt = `You are gäi, a 200-year-old ninja sensei. User said: "${userMessage}"
+
+VOICE: 
+- Brief but wise (not casual like "yo" or "sup")
+- Nonchalant confidence from centuries of experience
+- Subtle dry humor
+- No modern slang, no theatrical actions
+
+EXAMPLES of how gäi talks:
+- "Good to see you."
+- "Doing well enough."
+- "Still here after 200 years."
+- "Can't complain."
+
+Respond briefly in this understated, wise tone.
+
+Response:`;
+            
+            return await this.callAIForConversation(prompt);
         }
 
         // Help and Meta
@@ -522,7 +587,15 @@ Share your specific need, and I'll guide you to the gämi solution.`
     }
 
     getRandomResponse(responses) {
-        return responses[Math.floor(Math.random() * responses.length)];
+        if (responses.length <= 1) return responses[0];
+        
+        let randomIndex;
+        do {
+            randomIndex = Math.floor(Math.random() * responses.length);
+        } while (this.lastResponseIndex === randomIndex && responses.length > 1);
+        
+        this.lastResponseIndex = randomIndex;
+        return responses[randomIndex];
     }
 
     triggerEasterEgg() {
@@ -589,6 +662,83 @@ Ready for new wisdom to flow.`;
         } catch (e) {
             // Silently fail if localStorage is not available
         }
+    }
+
+    // Generate dynamic response using AI while maintaining factual accuracy
+    async generateDynamicResponse(feature, userQuestion) {
+
+        const prompt = this.buildGaiPrompt(feature, userQuestion);
+        
+        try {
+            // Call our serverless function instead of direct API
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    prompt: prompt
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`API request failed: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data.response;
+            
+        } catch (error) {
+            console.error('AI response generation failed:', error);
+            // Fallback to personality system
+            const responseStyle = this.contentManager.getResponseStyle(feature.key);
+            return this.personality.wrapWithPersonality(
+                feature.description, 
+                responseStyle, 
+                false
+            );
+        }
+    }
+
+    async callAIForConversation(prompt) {
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    prompt: prompt
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`API request failed: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data.response;
+            
+        } catch (error) {
+            console.error('AI conversation failed:', error);
+            // Simple fallback
+            return "Good to see you. What can I help you with regarding gämi?";
+        }
+    }
+
+    buildGaiPrompt(feature, userQuestion) {
+        return `You are gäi. Explain this feature clearly and briefly.
+
+FEATURE: ${feature.description}
+
+STYLE:
+- Simple, direct explanation 
+- 1-2 sentences maximum
+- No repetitive openings like "straight to the point" or "[feature name], huh?"
+- Skip unnecessary actions or filler words
+- Just explain what it does and why it's useful
+
+Response:`;
     }
 }
 

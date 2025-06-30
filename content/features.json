@@ -3,11 +3,21 @@
     "gami_overview": {
       "title": "gämi Platform",
       "description": "gämi is an all-in-one cloud platform for creative entrepreneurs. It offers file storage, tagging, integrated messaging, and powerful search. Designed to eliminate app-switching fatigue and cluttered workflows - the creative nervous system.",
+      "variations": [
+        "gämi = the creative nervous system you've been seeking. File storage, tagging, messaging, search - unified in one platform. No more app-switching fatigue, no more digital chaos.",
+        "All-in-one cloud platform designed for creative minds. File storage that works, tagging that makes sense, messaging that flows, search that finds. The end of scattered workflows.",
+        "Your digital dojo. One platform handling file storage, smart tagging, integrated messaging, and powerful search. Built to eliminate the chaos of juggling multiple tools."
+      ],
       "keywords": ["what is gämi", "what is gami", "tell me about gämi", "about gämi", "platform", "overview"]
     },
     "file_storage": {
       "title": "File Storage & Management",
       "description": "Store and access files on all your devices with mobile-optimized upload. Features include multiple file uploads at once, unzip/zip directly in platform, and seamless sync across devices.",
+      "variations": [
+        "File storage that doesn't make you question your life choices. Access files on any device, bulk upload multiple files, mobile-optimized interface. Plus zip/unzip right in the platform.",
+        "Your files, everywhere you need them. Mobile-first upload, bulk file handling, seamless device sync. Zip and unzip without leaving the platform.",
+        "File storage like having infinite pockets in your ninja outfit. Upload from mobile, handle multiple files at once, sync across devices instantly."
+      ],
       "keywords": ["file storage", "files", "upload", "storage", "zip", "unzip", "sync", "download", "mobile upload"]
     },
     "file_management": {
@@ -33,6 +43,11 @@
     "flex_play": {
       "title": "Flex Play",
       "description": "Flexible media player that continues playback while navigating other sections of the app. Supports full-screen mode for immersive experience.",
+      "variations": [
+        "Flex Play = media player that doesn't interrupt your flow. Keeps playing while you navigate the app, plus full-screen mode when you want total immersion.",
+        "Background media player that actually works. Continue playback while jumping between sections. Full-screen available when you need that immersive experience.",
+        "Media player with ninja-level flexibility. Playback continues seamlessly as you navigate. Full-screen mode for when you want to dive deep."
+      ],
       "keywords": ["flex play", "flexplay", "player", "media player", "background player", "playback", "full-screen", "fullscreen", "immersive", "navigation"]
     },
     "media_organization": {

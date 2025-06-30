@@ -1,0 +1,30 @@
+{
+  "name": "gaichat",
+  "version": "1.0.0",
+  "description": "gäi - Your ninja guide to the gämi creative platform",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 3000",
+    "start": "python -m http.server 8000",
+    "build": "echo 'Static site - no build needed'",
+    "deploy": "vercel --prod"
+  },
+  "keywords": [
+    "chatbot",
+    "creative",
+    "platform",
+    "ninja",
+    "gami",
+    "gai"
+  ],
+  "author": "gämi team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/p3t3rango/gaichat.git"
+  },
+  "homepage": "https://gaichat.vercel.app",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+} 

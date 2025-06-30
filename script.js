@@ -138,6 +138,9 @@ class GaiChatbot {
         // Initialize personality system
         this.personality = new GaiPersonality();
         
+        // Initialize content management system
+        this.contentManager = new ContentManager();
+        
         this.initializeEventListeners();
         this.loadChatHistory();
     }
@@ -269,10 +272,24 @@ class GaiChatbot {
     async generateResponse(userMessage) {
         const message = userMessage.toLowerCase();
         
-        // TODO: Replace these simulated responses with real FAQ data
-        // This section should be updated when real documentation is available
+        // Use Content Management System for accurate responses
+        const feature = this.contentManager.findFeature(message);
         
-        // FAQ Pattern Matching - Now with consistent personality
+        if (feature) {
+            // Get appropriate personality style for this feature
+            const responseStyle = this.contentManager.getResponseStyle(feature.key);
+            const includeZenEnding = ['gami_overview', 'flex_play', 'collaboration'].includes(feature.key);
+            
+            return this.personality.wrapWithPersonality(
+                feature.description, 
+                responseStyle, 
+                includeZenEnding
+            );
+        }
+        
+        // Legacy pattern matching (will be phased out)
+        // TODO: Remove these when all content is moved to content management system
+        
         if (this.matchesPattern(message, ['what is gämi', 'what is gami', 'tell me about gämi', 'about gämi'])) {
             const responses = [
                 `gämi is the creative nervous system you've been seeking. An all-in-one cloud platform that eliminates the chaos of app-switching.
@@ -291,7 +308,7 @@ One platform. Zero distractions. Maximum creative potential.`
             return this.personality.wrapWithPersonality(content, 'general', true);
         }
 
-        if (this.matchesPattern(message, ['file storage', 'files', 'upload', 'storage'])) {
+        if (this.matchesPattern(message, ['file storage', 'files', 'upload', 'storage', 'zip', 'unzip', 'sync', 'download'])) {
             const responses = [
                 `File storage in gämi is like having infinite pockets in your ninja outfit.
 
@@ -313,7 +330,7 @@ Simple. Powerful. Ninja-approved.`
             return this.personality.wrapWithPersonality(content, 'technical');
         }
 
-        if (this.matchesPattern(message, ['collaboration', 'teamwork', 'share', 'sharing', 'team'])) {
+        if (this.matchesPattern(message, ['collaboration', 'teamwork', 'share', 'sharing', 'team', 'community folders', 'timestamped', 'notes'])) {
             const responses = [
                 `True collaboration requires more than sending files through the digital void.
 
@@ -335,7 +352,7 @@ Because good collaboration is like a well-executed team jutsu - seamless and pow
             return this.personality.wrapWithPersonality(content, 'technical', true);
         }
 
-        if (this.matchesPattern(message, ['communication', 'messaging', 'chat', 'talk'])) {
+        if (this.matchesPattern(message, ['communication', 'messaging', 'chat', 'talk', 'encrypted', 'voice notes', 'calls', 'video calls', 'to-do', 'todo'])) {
             const content = `Encrypted messaging, voice notes, and video calls. Because sometimes even ninjas need to break their vow of silence.
 
 Plus To-Do messages that turn conversations into actionable tasks. No more "wait, what were we supposed to do again?"
@@ -344,7 +361,7 @@ Communication that actually communicates. Revolutionary concept.`;
             return this.personality.wrapWithPersonality(content, 'technical');
         }
 
-        if (this.matchesPattern(message, ['media', 'playback', 'audio', 'video', 'music'])) {
+        if (this.matchesPattern(message, ['media', 'playback', 'audio', 'video', 'music', 'flex play', 'flexplay', 'player', 'playlists', 'galleries', 'background player'])) {
             const content = `Flex Play = background media player that doesn't fight you for control.
 
 Create playlists and galleries for your audio, images, and videos. Organization that makes sense instead of digital chaos.
@@ -353,7 +370,7 @@ Your media library, flowing like water. Or like a perfectly executed kata.`;
             return this.personality.wrapWithPersonality(content, 'technical', true);
         }
 
-        if (this.matchesPattern(message, ['tagging', 'tags', 'organize', 'bpm', 'key', 'mood'])) {
+        if (this.matchesPattern(message, ['tagging', 'tags', 'organize', 'bpm', 'key', 'mood', 'organization', 'folders', 'classification', 'metadata'])) {
             const content = `Tagging with actual intelligence:
 • BPM detection for audio
 • Key recognition  

@@ -301,11 +301,20 @@ class GaiChatbot {
             return this.personality.wrapWithPersonality(content, 'technical');
         }
         
-        // Use Content Management System for other features  
+        // PRIORITY: Use hand-crafted responses for major features (they work perfectly)
+        // Let these fall through to legacy pattern matching below
+        
+        // Use Content Management System + AI only for edge cases
         const feature = this.contentManager.findFeature(message);
         
-        if (feature && !this.matchesPattern(message, ['what is gämi', 'what is gami', 'tell me about gämi', 'about gämi', 'file storage', 'files', 'upload', 'storage'])) {
-            // Generate dynamic response using AI while maintaining factual accuracy
+        if (feature && !this.matchesPattern(message, [
+            'what is gämi', 'what is gami', 'tell me about gämi', 'about gämi', 
+            'file storage', 'files', 'upload', 'storage',
+            'collaboration', 'teamwork', 'share', 'sharing', 'team', 
+            'communication', 'messaging', 'chat', 'encrypted', 'voice notes',
+            'media', 'playback', 'flex play', 'playlists'
+        ])) {
+            // Only use AI for features that don't have good legacy responses
             return await this.generateDynamicResponse(feature, userMessage);
         }
         
@@ -717,33 +726,20 @@ Ready for new wisdom to flow.`;
     }
 
     buildGaiPrompt(feature, userQuestion) {
-        return `CRITICAL: You must respond EXACTLY like these examples. No variations.
+        return `You are gäi, a 200-year-old ninja sensei. Respond in character.
 
-FEATURE: ${feature.description}
+Feature info: ${feature.description}
 
-EXACT RESPONSE EXAMPLES:
-"*nods* One platform for your creative chaos. No more app juggling."
-"*adjusts hood* gämi handles file storage, messaging, search. Less switching, more flow."
-"All-in-one creative platform. Simple."
+gäi's communication style:
+- Brief, zen-like wisdom 
+- Slightly sarcastic but helpful
+- Uses subtle actions like *nods* or *adjusts hood*
+- No sales-speak or enthusiasm
+- Matter-of-fact tone
 
-ABSOLUTELY FORBIDDEN - DO NOT USE:
-- "Greetings" / "Hello" / "fellow ninjas"  
-- "let me tell you" / "I'm here to"
-- "amazing" / "powerful" / "incredible"
-- Long explanations
-- Sales language
-- Enthusiasm
+Question: "${userQuestion}"
 
-STRICT RULES:
-- Maximum 15 words total
-- Start with "*nods*" or "*adjusts hood*" 
-- Explain what gämi does in 1 simple sentence
-- End response immediately
-- Sound bored/matter-of-fact
-
-User: "${userQuestion}"
-
-Response (15 words max):`;
+Respond as gäi would - brief, wise, slightly dry:`;
     }
 }
 

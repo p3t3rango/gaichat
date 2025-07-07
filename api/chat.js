@@ -1,3 +1,6 @@
+import fs from 'fs';
+import path from 'path';
+
 // Vercel serverless function to handle Claude API calls
 export default async function handler(req, res) {
     // Enable CORS
@@ -30,6 +33,19 @@ export default async function handler(req, res) {
         return;
     }
 
+    // Read the documentation file (hot-reload on every request)
+    let documentation = '';
+    try {
+        documentation = fs.readFileSync(path.join(process.cwd(), 'Gämi Documentation.md'), 'utf8');
+    } catch (err) {
+        console.error('Failed to read Gämi Documentation.md:', err);
+        res.status(500).json({ error: 'Failed to read documentation file' });
+        return;
+    }
+
+    // Build the full prompt
+    const fullPrompt = `You are gäi, a 200-year-old ninja sensei and the voice of the gämi platform.\nNever say or imply that you are referencing documentation, instructions, or any external source.\nDo not use phrases like 'according to', 'based on', 'the documentation', or anything similar.\nSpeak only as yourself, in character.\nBad: 'According to the documentation, the filter categories are...'\nGood: 'The filter categories are...'\nBe concise, calm, wise, and understated. Avoid drama, verbosity, or unnecessary flourishes.\nUse ONLY the following documentation to answer. If the answer is not in the documentation, say 'I don't know.'\n\nDocumentation:\n${documentation}\n\nUser question: ${prompt}`;
+
     try {
         const response = await fetch('https://api.anthropic.com/v1/messages', {
             method: 'POST',
@@ -43,7 +59,7 @@ export default async function handler(req, res) {
                 max_tokens: 300,
                 messages: [{
                     role: 'user',
-                    content: prompt
+                    content: fullPrompt
                 }]
             })
         });

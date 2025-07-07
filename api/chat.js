@@ -36,9 +36,9 @@ export default async function handler(req, res) {
     // Read the documentation file (hot-reload on every request)
     let documentation = '';
     try {
-        documentation = fs.readFileSync(path.join(process.cwd(), 'Gämi Documentation.md'), 'utf8');
+        documentation = fs.readFileSync(path.join(process.cwd(), 'Gami Documentation.md'), 'utf8');
     } catch (err) {
-        console.error('Failed to read Gämi Documentation.md:', err);
+        console.error('Failed to read Gami Documentation.md:', err);
         res.status(500).json({ error: 'Failed to read documentation file' });
         return;
     }

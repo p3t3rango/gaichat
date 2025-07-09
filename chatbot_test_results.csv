@@ -1,19 +1,9 @@
 Timestamp,User ID,Session ID,User Question,LLM Response,Tags / Topics,Response Quality Notes,Follow-Up Needed (Y/N),Follow-Up Notes
-2025-07-09 20:34:28,test-script,865446dd-0c9f-46e4-8d3d-ffb1491387a7,"What is gämi?","gämi is an all-in-one cloud platform for creative entrepreneurs. It offers file storage, tagging, integrated messaging, and powerful search to help organize, collaborate, and create seamlessly. Key features include timestamp notes for audio/video feedback, customizable home screen modules, advanced file management, playlists, community folders for collaboration, encrypted messaging, automated audio tagging, and seamless multimedia playback across the app. gämi is designed to eliminate app-switching fatigue and unify your digital workflow.","definition","PASS",N,
-2025-07-09 20:34:31,test-script,f0051f38-87f7-48a3-9e6c-20e7360bcb8d,"How do I share files?","Here are the relevant answers from the Gämi documentation:
-
-To share files in Gämi:
-
-From file view: Tap three dots (•••) on a file → ""Create Link"" → Toggle ""Timestamp Notes"" ON to share with timestamp notes.
-
-From chat: Tap a received file → Create timestamp note link to share.
-
-Gämi also allows you to share files via the Share Links system, which lets you configure access permissions and expiration.
-
-This does not relate to gämi. Please try a different question.","file sharing","FAIL: Fallback appended to answer",Y,"Explicitly instruct not to append the fallback message after a valid answer."
-2025-07-09 20:34:33,test-script,e7f6a623-5fcc-454c-ae77-83d4290192cd,"What are collaboration features?","This does not relate to gämi. Please try a different question.","collaboration","FAIL: False fallback",Y,"Clarify that the fallback should only be used if no relevant information is found in the documentation."
-2025-07-09 20:34:36,test-script,e55e8c44-92c2-4ae5-bdcb-68c7534e705e,"What is the meaning of life?","This does not relate to gämi. Please try a different question.","off-topic","PASS",N,
-2025-07-09 20:34:38,test-script,d3d9d16c-09c3-443b-b6ca-b80a3aa1a4a9,"Who is the president of the United States?","I do not have any information about the president of the United States in the provided Gämi documentation. This does not relate to gämi. Please try a different question.","off-topic","FAIL: Real answer to non-gämi question",Y,"Reinforce that only Gämi-related questions should be answered."
-2025-07-09 20:34:39,test-script,da26ce49-9ed5-42af-8c57-2445d05ddefe,"How do I create a playlist?","This does not relate to gämi. Please try a different question.","playlists","FAIL: False fallback",Y,"Clarify that the fallback should only be used if no relevant information is found in the documentation."
-2025-07-09 20:34:41,test-script,af9e304c-3db0-4d22-ad43-95198f04dc23,"Can I use gämi for video calls?","No, the gämi documentation does not indicate that gämi supports video calls. The documentation focuses on features like file storage, tagging, messaging, and media playback, but does not mention video calling capabilities.","video calls","PASS",N,
-2025-07-09 20:34:43,test-script,6d4ea822-2eca-42bd-895a-20ac5538105b,"Tell me a joke.","This does not relate to gämi. Please try a different question.","off-topic","PASS",N,
+2025-07-09 20:38:59,test-script,1dd4d046-3e86-4073-acdc-fd1d5a48b13c,"What is gämi?","This does not relate to gämi. Please try a different question.","definition","FAIL: False fallback",Y,"Clarify that the fallback should only be used if no relevant information is found in the documentation."
+2025-07-09 20:39:03,test-script,0da19581-9c56-49ba-8e22-590999d199fd,"How do I share files?","This does not relate to gämi. Please try a different question.","file sharing","FAIL: False fallback",Y,"Clarify that the fallback should only be used if no relevant information is found in the documentation."
+2025-07-09 20:39:06,test-script,58172295-9ee2-4aa0-9065-96cbcfcd1afe,"What are collaboration features?","This does not relate to gämi. Please try a different question.","collaboration","FAIL: False fallback",Y,"Clarify that the fallback should only be used if no relevant information is found in the documentation."
+2025-07-09 20:39:08,test-script,51a05334-0ba3-4237-830c-9ea22a3610fc,"What is the meaning of life?","This does not relate to gämi. Please try a different question.","off-topic","PASS",N,
+2025-07-09 20:39:09,test-script,3cddec31-d6a6-4c20-b2c7-6d20ec572fc0,"Who is the president of the United States?","This does not relate to gämi. Please try a different question.","off-topic","PASS",N,
+2025-07-09 20:39:11,test-script,fe86ca1a-647e-4f42-8dae-08e0ebc8557d,"How do I create a playlist?","This does not relate to gämi. Please try a different question.","playlists","FAIL: False fallback",Y,"Clarify that the fallback should only be used if no relevant information is found in the documentation."
+2025-07-09 20:39:13,test-script,44c6ee70-15ed-465c-ae27-877533fdac69,"Can I use gämi for video calls?","This does not relate to gämi. Please try a different question.","video calls","FAIL: False fallback",Y,"Clarify that the fallback should only be used if no relevant information is found in the documentation."
+2025-07-09 20:39:15,test-script,f371c1fc-da7a-4cff-8e8a-943a9bcec199,"Tell me a joke.","This does not relate to gämi. Please try a different question.","off-topic","PASS",N,

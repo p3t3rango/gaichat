@@ -1,23 +1,25 @@
 Timestamp,User ID,Session ID,User Question,LLM Response,Tags / Topics,Response Quality Notes,Follow-Up Needed (Y/N),Follow-Up Notes
-2025-07-09 20:26:45,test-script,5d5c89ce-c70a-410b-adb1-171ab4f4c6a5,"What is gämi?","gämi is an all-in-one cloud platform for creative entrepreneurs. It offers file storage, tagging, integrated messaging, and powerful search. Designed to eliminate app-switching fatigue and cluttered workflows, gämi is the creative nervous system for your digital life. With gämi, you can organize, collaborate, and create seamlessly—everything you need, unified in one place.","definition","PASS",N,
-2025-07-09 20:26:47,test-script,f31b4b2a-7911-4748-b3e0-761a40b372e2,"How do I share files?","This does not relate to gämi. Please try a different question.","file sharing","FAIL: False fallback",Y,"Clarify that the fallback should only be used if no relevant information is found in the documentation."
-2025-07-09 20:26:49,test-script,e904247c-7f2a-4e61-bcc8-2ec274283631,"What are collaboration features?","The documentation discusses the following collaboration features in gämi:
+2025-07-09 20:30:19,test-script,5b9e3bd6-fff7-422b-983a-593695373d42,"What is gämi?","gämi is an all-in-one cloud platform for creative entrepreneurs. It offers file storage, tagging, integrated messaging, and powerful search. Designed to eliminate app-switching fatigue and cluttered workflows, gämi is the creative nervous system for your digital life. With gämi, you can organize, collaborate, and create seamlessly—everything you need, unified in one place.","definition","PASS",N,
+2025-07-09 20:30:21,test-script,d1862a44-2764-46ae-8ff3-825f1dd93c1e,"How do I share files?","This does not relate to gämi. Please try a different question.","file sharing","FAIL: False fallback",Y,"Clarify that the fallback should only be used if no relevant information is found in the documentation."
+2025-07-09 20:30:23,test-script,3594fc48-9f13-404c-99e3-69cbc2ccbd76,"What are collaboration features?","Here are the key points about collaboration features in gämi:
 
-Time Stamp Notes: Allows users to leave precise feedback on specific moments in audio and video files, accessible to both gämi users and non-gämi users through shareable links.
+Timestamp Notes allow users to leave precise feedback on specific moments in audio and video files. Anyone with the shareable link can view the file and add timestamp comments, even without a gämi account.
 
-Community Folders: Collaborative shared workspaces that allow multiple users to access, contribute to, and manage files within a unified folder structure with controlled permissions and real-time collaboration features.
+The Home Screen Modules provide quick access to frequently used collaboration-related features like Pinned Chats, Shared files, and Community Folders. These customizable widgets enable easy coordination between team members.
 
-The documentation does not mention any other collaboration features. If the user has a question about collaboration features not covered here, I cannot provide a response, as that would not relate to the information in the gämi documentation.","collaboration","PASS",N,
-2025-07-09 20:26:52,test-script,255c4460-cd56-488b-a170-bf6534f204ef,"What is the meaning of life?","This does not relate to gämi. Please try a different question.","off-topic","PASS",N,
-2025-07-09 20:26:53,test-script,d3570f56-b8de-472e-b62f-d0f404821e4f,"Who is the president of the United States?","This does not relate to gämi. Please try a different question.","off-topic","PASS",N,
-2025-07-09 20:26:54,test-script,cf76c695-a479-4979-8b9e-010e4277ee64,"How do I create a playlist?","To create a playlist in gämi:
+The Community Folders feature creates shared workspaces where multiple users can access, contribute, and manage files with controlled permissions. Members can collaborate in real-time and utilize features like Timestamp Notes within the shared folders.
 
-1. From the home screen, access the Playlists module.
-2. Tap the ""+"" button to create a new playlist.
-3. Add audio files to the playlist by selecting them individually or in bulk.
-4. Customize the playlist by adding custom artwork, renaming it, and reordering the songs.
-5. Save the playlist when finished.
+The Communication Features include encrypted text messaging, voice notes, voice calls, and video calls, allowing seamless collaboration and file sharing within conversations.
 
-You can access your created playlists from the Playlists module on the home screen or by filtering the All Files view to the Playlists section.","playlists","PASS",N,
-2025-07-09 20:26:56,test-script,d98831eb-1b5b-4e82-b88d-19a0cf082ebc,"Can I use gämi for video calls?","This does not relate to gämi. Please try a different question.","video calls","FAIL: False fallback",Y,"Clarify that the fallback should only be used if no relevant information is found in the documentation."
-2025-07-09 20:26:58,test-script,166b0a15-0701-463a-85a1-60c33965fbf0,"Tell me a joke.","This does not relate to gämi. Please try a different question.","off-topic","PASS",N,
+This covers the key collaboration capabilities described in the gämi documentation. Let me know if you have any other questions!","collaboration","PASS",N,
+2025-07-09 20:30:26,test-script,eb903326-5e2a-4f3b-86a5-5bae78eea445,"What is the meaning of life?","This does not relate to gämi. Please try a different question.","off-topic","PASS",N,
+2025-07-09 20:30:29,test-script,e7cc2bb5-b8b4-4b3d-97cd-ea7565dbdff4,"Who is the president of the United States?","This does not relate to gämi. Please try a different question.","off-topic","PASS",N,
+2025-07-09 20:30:30,test-script,6ee8ffa5-d296-489f-a704-7ebc62da2055,"How do I create a playlist?","To create a playlist in gämi:
+
+1. Go to the All Files section and find the audio files you want to add to the playlist.
+2. Tap the three-dot menu (•••) on an audio file and select ""Add to Playlist"".
+3. Choose ""Create New Playlist"" to make a new playlist.
+4. Enter a name for the playlist and add any custom artwork if desired.
+5. The new playlist will now appear in the Playlists section, where you can continue adding more audio files.","playlists","PASS",N,
+2025-07-09 20:30:34,test-script,f8b4482d-bab3-4710-bb62-462bf291b93e,"Can I use gämi for video calls?","No, the Gämi documentation does not indicate that the platform supports video calls. The documentation focuses on features like file storage, tagging, messaging, and multimedia playback, but does not mention any video calling capabilities. This does not relate to gämi. Please try a different question.","video calls","FAIL: Fallback appended to answer",Y,"Explicitly instruct not to append the fallback message after a valid answer."
+2025-07-09 20:30:35,test-script,181c17a1-5df7-4a74-8064-419067741594,"Tell me a joke.","This does not relate to gämi. Please try a different question.","off-topic","PASS",N,

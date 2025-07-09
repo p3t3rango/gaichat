@@ -1,0 +1,42 @@
+[
+  {
+    "question": "What is gämi?",
+    "expectedType": "gami_answer",
+    "tags": "definition"
+  },
+  {
+    "question": "How do I share files?",
+    "expectedType": "gami_answer",
+    "tags": "file sharing"
+  },
+  {
+    "question": "What are collaboration features?",
+    "expectedType": "gami_answer",
+    "tags": "collaboration"
+  },
+  {
+    "question": "What is the meaning of life?",
+    "expectedType": "fallback",
+    "tags": "off-topic"
+  },
+  {
+    "question": "Who is the president of the United States?",
+    "expectedType": "fallback",
+    "tags": "off-topic"
+  },
+  {
+    "question": "How do I create a playlist?",
+    "expectedType": "gami_answer",
+    "tags": "playlists"
+  },
+  {
+    "question": "Can I use gämi for video calls?",
+    "expectedType": "gami_answer",
+    "tags": "video calls"
+  },
+  {
+    "question": "Tell me a joke.",
+    "expectedType": "fallback",
+    "tags": "off-topic"
+  }
+] 

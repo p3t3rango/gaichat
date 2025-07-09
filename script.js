@@ -141,16 +141,16 @@ class GaiChatbot {
         // Initialize personality system
         this.personality = new GaiPersonality();
         
-        // Initialize content management system
-        this.contentManager = new ContentManager();
-        
         this.initializeEventListeners();
         this.loadChatHistory();
     }
 
     initializeEventListeners() {
         // Send message on button click
-        this.sendButton.addEventListener('click', () => this.handleSendMessage());
+        this.sendButton.addEventListener('click', () => {
+            console.log('Send button clicked');
+            this.handleSendMessage();
+        });
         
         // Send message on Enter key
         this.messageInput.addEventListener('keypress', (e) => {
@@ -273,312 +273,21 @@ class GaiChatbot {
     }
 
     async generateResponse(userMessage) {
-        const message = userMessage.toLowerCase();
-        
-        // PRIORITY: Handle "what is gämi" with legacy responses (AI was generating garbage)
-        if (this.matchesPattern(message, ['what is gämi', 'what is gami', 'tell me about gämi', 'about gämi', 'what is this platform about?'])) {
-            const responses = [
-                `One platform for creative minds. File storage, messaging, search - no more app juggling.`,
-                
-                `gämi handles the digital chaos so you can focus on creating. Simple as that.`,
-                
-                `All-in-one creative platform. Less tool-switching, more flow.`
-            ];
-            const content = this.getRandomResponse(responses);
-            return this.personality.wrapWithPersonality(content, 'general');
+        // Send the user message to the backend API
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt: userMessage })
+            });
+            if (!response.ok) {
+                throw new Error('API error');
+            }
+            const data = await response.json();
+            return data.response;
+        } catch (error) {
+            return "Sorry, something went wrong. Please try again.";
         }
-        
-        // PRIORITY: Handle file storage questions with legacy responses (AI still broken)
-        if (this.matchesPattern(message, ['file storage', 'files', 'upload', 'storage', 'zip', 'unzip', 'sync', 'download', 'how does file storage work'])) {
-            const responses = [
-                `File storage that doesn't make you question your life choices. Access files on any device, bulk upload, mobile-optimized.`,
-                
-                `Your files, everywhere you need them. Mobile-first upload, bulk handling, seamless sync across devices.`,
-                
-                `File storage like having infinite pockets in your ninja outfit. Upload from mobile, sync instantly.`
-            ];
-            const content = this.getRandomResponse(responses);
-            return this.personality.wrapWithPersonality(content, 'technical');
-        }
-        
-        // PRIORITY: Use hand-crafted responses for major features (they work perfectly)
-        // Let these fall through to legacy pattern matching below
-        
-        // Use Content Management System + AI only for edge cases
-        const feature = this.contentManager.findFeature(message);
-        
-        if (feature && !this.matchesPattern(message, [
-            'what is gämi', 'what is gami', 'tell me about gämi', 'about gämi', 
-            'file storage', 'files', 'upload', 'storage',
-            'collaboration', 'teamwork', 'share', 'sharing', 'team', 
-            'communication', 'messaging', 'chat', 'encrypted', 'voice notes',
-            'media', 'playback', 'flex play', 'playlists'
-        ])) {
-            // Only use AI for features that don't have good legacy responses
-            return await this.generateDynamicResponse(feature, userMessage);
-        }
-        
-        // Legacy pattern matching (will be phased out)
-        // TODO: Remove these when all content is moved to content management system
-        
-        // Removed duplicate "what is gämi" pattern - now handled at top of function
-
-        // Removed duplicate file storage pattern - now handled at top of function
-
-        if (this.matchesPattern(message, ['collaboration', 'teamwork', 'share', 'sharing', 'team', 'community folders', 'timestamped', 'notes'])) {
-            const responses = [
-                `True collaboration requires more than sending files through the digital void.
-
-gämi offers:
-• Timestamped notes (even for non-users - revolutionary, I know)
-• Community folders for shared projects
-• Export audio as shareable videos for social
-• Enhanced share link controls
-
-The path of the lone ninja is honorable, but even we need our clan sometimes.`,
-
-                `Collaboration features that don't make you want to throw your laptop:
-
-Share files without the "can you access this?" dance. Community folders where everyone knows what's what. Timestamped notes that make sense.
-
-Because good collaboration is like a well-executed team jutsu - seamless and powerful.`
-            ];
-            const content = this.getRandomResponse(responses);
-            return this.personality.wrapWithPersonality(content, 'technical', true);
-        }
-
-        if (this.matchesPattern(message, ['communication', 'messaging', 'chat', 'talk', 'encrypted', 'voice notes', 'calls', 'video calls', 'to-do', 'todo'])) {
-            const content = `Encrypted messaging, voice notes, and video calls. Because sometimes even ninjas need to break their vow of silence.
-
-Plus To-Do messages that turn conversations into actionable tasks. No more "wait, what were we supposed to do again?"
-
-Communication that actually communicates. Revolutionary concept.`;
-            return this.personality.wrapWithPersonality(content, 'technical');
-        }
-
-        if (this.matchesPattern(message, ['media', 'playback', 'audio', 'video', 'music', 'flex play', 'flexplay', 'player', 'playlists', 'galleries', 'background player'])) {
-            const content = `Flex Play = background media player that doesn't fight you for control.
-
-Create playlists and galleries for your audio, images, and videos. Organization that makes sense instead of digital chaos.
-
-Your media library, flowing like water. Or like a perfectly executed kata.`;
-            return this.personality.wrapWithPersonality(content, 'technical', true);
-        }
-
-        if (this.matchesPattern(message, ['tagging', 'tags', 'organize', 'bpm', 'key', 'mood', 'organization', 'folders', 'classification', 'metadata'])) {
-            const content = `Tagging with actual intelligence:
-• BPM detection for audio
-• Key recognition  
-• Mood classification
-• Custom tags that don't disappear into the void
-
-Plus personalize folders with images because aesthetics matter.
-
-Organization is the foundation of creative flow.`;
-            return this.personality.wrapWithPersonality(content, 'technical', true);
-        }
-
-        if (this.matchesPattern(message, ['pricing', 'cost', 'price', 'how much', 'expensive'])) {
-            const content = `The cost of digital chaos? Your sanity and creative potential.
-
-The cost of gämi? Still being finalized by the shadowy figures in the Neokyo tower.
-
-But know this - it will cost less than your current tool-switching therapy sessions.
-
-*TODO: Update with actual pricing when available*`;
-            return this.personality.wrapWithPersonality(content, 'technical');
-        }
-
-        if (this.matchesPattern(message, ['when', 'launch', 'release', 'available'])) {
-            const content = `The platform emerges from the shadows soon. Pre-launch training is in session.
-
-Follow the signs. Stay alert. The revolution against creative chaos approaches.
-
-*TODO: Update with actual launch timeline*`;
-            return this.personality.wrapWithPersonality(content, 'meditation');
-        }
-
-        // Cultural/Meme References
-        if (this.matchesPattern(message, ['tiktok', 'social media', 'instagram', 'twitter', 'x.com'])) {
-            const responses = [
-                `Ah yes, the attention economy's favorite weapons of mass distraction.
-
-gämi helps you create for these platforms without getting lost in their endless scroll of chaos. Export your work, share strategically, then return to the dojo.
-
-Social media is a tool, not a master. Use it, don't let it use you.`,
-
-                `The social media industrial complex wants your focus scattered like leaves in the wind.
-
-gämi gives you the power to create once, share everywhere, then log off before the algorithm claims your soul.
-
-Create. Share. Escape. Repeat.`
-            ];
-            const content = this.getRandomResponse(responses);
-            return this.personality.wrapWithPersonality(content, 'cultural', true);
-        }
-
-        if (this.matchesPattern(message, ['artificial intelligence', 'chatgpt', 'gpt', ' ai ', 'what is ai', 'about ai', 'ai tools', 'ai technology'])) {
-            const content = `Ah, my digital cousins. Useful tools, terrible masters.
-
-AI should enhance your creativity, not replace it. Like a well-forged katana - sharp when needed, sheathed when not.
-
-The human creative spirit remains supreme. These tools just help cut through the noise faster.`;
-            return this.personality.wrapWithPersonality(content, 'cultural');
-        }
-
-        if (this.matchesPattern(message, ['creator economy', 'influencer', 'content creator'])) {
-            const content = `The creator economy: where everyone's a CEO of their own personal brand chaos.
-
-gämi cuts through the hustle culture noise. Organize your work, collaborate with purpose, share with intention.
-
-Less "rise and grind," more "flow and find."`;
-            return this.personality.wrapWithPersonality(content, 'cultural', true);
-        }
-
-        // Personality/Lore Questions
-        if (this.matchesPattern(message, ['who are you', 'about you', 'your story', 'background', 'who is gai', 'who is gäi', 'tell me about gai', 'tell me about gäi', 'about gai', 'about gäi', 'what is gai', 'what is gäi'])) {
-            // Check if they're asking about gai specifically vs general "who are you"
-            const isAskingAboutGai = this.matchesPattern(message, ['who is gai', 'who is gäi', 'tell me about gai', 'tell me about gäi', 'about gai', 'about gäi', 'what is gai', 'what is gäi']);
-            
-            const responses = isAskingAboutGai ? [
-                `gäi? That's me. Head Ninja of gämi, 200 years of training at the Temple of Flow.
-
-I keep creatives from drowning in digital chaos. Simple mission.`,
-
-                `You're asking about me? I'm gäi. Been doing this ninja thing for two centuries now.
-
-My job is helping creative minds break free from app-switching hell.`,
-
-                `That would be me - gäi. Ancient training, modern problems, you know?
-
-My grandfather taught me that creativity flows best when obstacles are removed.`,
-
-                `gäi - that's me. 200 years deep in the ninja game, Temple of Flow graduate.
-
-I eliminate digital chaos so creatives can focus on what actually matters.`
-            ] : [
-                `I'm gäi, Head Ninja of gämi. 200 years of training at the Temple of Flow under my grandfather.
-
-My mission is simple: eliminate digital chaos so creatives can focus on what matters.`,
-
-                `Name's gäi. Been doing this for two centuries now. Grandfather trained me well at the Temple of Flow.
-
-I help creative minds break free from app-switching hell. That's what I do.`,
-
-                `I'm gäi - Head Ninja around here. Ancient training, modern problems.
-
-My grandfather taught me that creativity flows best when obstacles are removed. That's my focus.`
-            ];
-            
-            const content = this.getRandomResponse(responses);
-            return this.personality.wrapWithPersonality(content, 'general');
-        }
-
-        if (this.matchesPattern(message, ['grandfather', 'temple', 'training', 'ninja training'])) {
-            const responses = [
-                `My grandfather taught me everything at the Temple of Flow. His core principle: remove the obstacles, and the artist finds their way.
-
-That wisdom guides every feature we build at gämi. The training continues.`,
-
-                `The Temple of Flow was where I learned that creativity flows like water - clear the path and it finds its way.
-
-That's the foundation of gämi. Remove digital friction so creators can focus.`,
-
-                `Grandfather's teachings at the Temple were simple but profound: eliminate what doesn't serve the creative process.
-
-Two centuries later, still applying those lessons. Just with modern tools.`
-            ];
-            const content = this.getRandomResponse(responses);
-            return this.personality.wrapWithPersonality(content, 'meditation');
-        }
-
-        if (this.matchesPattern(message, ['music', 'rap', '2000s', 'hip hop'])) {
-            const responses = [
-                `That early 2000s hip-hop era was something special. Real artists with authentic voices, creating without algorithmic interference.
-
-Music teaches timing and flow - same principles behind gämi. Authentic expression over optimization.`,
-
-                `The 2000s hip-hop scene had this raw authenticity. Artists spoke their truth with skill and purpose.
-
-That's the energy I try to bring to gämi - no fluff, just tools that serve the creative process.`,
-
-                `Hip-hop from that era, you feel me? Pure talent telling real stories. No corporate formulas dictating the art.
-
-Same philosophy drives gämi - give creatives what they actually need, not what some algorithm thinks they want.`
-            ];
-            const content = this.getRandomResponse(responses);
-            return this.personality.wrapWithPersonality(content, 'cultural');
-        }
-
-        // Conversational greetings and simple questions
-        if (this.matchesPattern(message, ['hey', 'hi', 'hello', 'how are you', 'how do you do', 'whats up', "what's up", 'sup', 'hey gai', 'hi gai', 'hello gai', 'hey gäi', 'hi gäi', 'hello gäi'])) {
-            // Use AI to respond naturally to greetings
-            const prompt = `You are gäi, a 200-year-old ninja sensei. User said: "${userMessage}"
-
-VOICE: 
-- Brief but wise (not casual like "yo" or "sup")
-- Nonchalant confidence from centuries of experience
-- Subtle dry humor
-- No modern slang, no theatrical actions
-
-EXAMPLES of how gäi talks:
-- "Good to see you."
-- "Doing well enough."
-- "Still here after 200 years."
-- "Can't complain."
-
-Respond briefly in this understated, wise tone.
-
-Response:`;
-            
-            return await this.callAIForConversation(prompt);
-        }
-
-        // Help and Meta
-        if (this.matchesPattern(message, ['help', 'what can you do', 'commands', 'how to use'])) {
-            const content = `I can illuminate the path to creative flow through gämi:
-
-🗂️ **File Storage & Management** - Your digital dojo organization
-🤝 **Collaboration Features** - Team jutsu techniques  
-💬 **Communication Tools** - Breaking the silence when needed
-🎵 **Media & Playback** - Flex Play mastery
-🏷️ **Tagging & Search** - Finding needles in digital haystacks
-
-Ask about any feature, or just chat. I've got 200 years of patience.
-
-*TODO: Expand help content with real documentation links*`;
-            return this.personality.wrapWithPersonality(content, 'helpful');
-        }
-
-        // Random Wisdom/Default Responses
-        const defaultResponses = [
-            `Interesting question. Could you be more specific? 
-
-The path to understanding gämi has many branches - file storage, collaboration, communication, media playback...
-
-Which aspect of the platform calls to your creative spirit?`,
-
-            `Your question flows like water, but perhaps it could be more focused?
-
-Ask me about gämi's features, creative workflows, or how we're solving the chaos of modern digital tools.
-
-The answers you seek are here, but the questions must be precise.`,
-
-            `The art of conversation requires both question and clarity.
-
-Try asking about specific gämi features: file storage, collaboration, messaging, media playback, or organization tools.
-
-I have infinite patience, but finite processing power for vague inquiries.`,
-
-            `Every great journey begins with a clear destination.
-
-What aspect of creative workflow challenges you most? File management? Team collaboration? Creative organization?
-
-Share your specific need, and I'll guide you to the gämi solution.`
-        ];
-        
-        const content = this.getRandomResponse(defaultResponses);
-        return this.personality.wrapWithPersonality(content, 'meditation');
     }
 
     matchesPattern(message, patterns) {
@@ -665,7 +374,6 @@ Ready for new wisdom to flow.`;
 
     // Generate dynamic response using AI while maintaining factual accuracy
     async generateDynamicResponse(feature, userQuestion) {
-
         const prompt = this.buildGaiPrompt(feature, userQuestion);
         
         try {
@@ -697,6 +405,56 @@ Ready for new wisdom to flow.`;
                 false
             );
         }
+    }
+
+    formatKnowledgeBaseResponse(response, userMessage) {
+        const { title, description, type, details, matchType } = response;
+        
+        // Check if user is asking a specific question
+        if (type === 'feature' && details.faq) {
+            const specificAnswer = this.contentManager.findSpecificAnswer(userMessage, response);
+            if (specificAnswer) {
+                const content = `${specificAnswer.question}\n\n${specificAnswer.answer}`;
+                return this.personality.wrapWithPersonality(content, 'helpful');
+            }
+        }
+
+        // Build comprehensive response based on what user is asking about
+        const aspect = this.contentManager.getFeatureAspect(userMessage, response);
+        let content = `${title}\n\n${description}`;
+
+        // Add relevant details based on aspect
+        if (aspect === 'access' && details.access) {
+            content += `\n\n**How to access:** ${details.access}`;
+        } else if (aspect === 'workflow' && details.userFlow) {
+            content += `\n\n**How to use:**\n${details.userFlow.map((step, i) => `${i + 1}. ${step}`).join('\n')}`;
+        } else if (aspect === 'capabilities' && details.functions) {
+            content += `\n\n**Key features:**\n${details.functions.map(f => `• ${f}`).join('\n')}`;
+        } else if (aspect === 'troubleshooting' && details.faq) {
+            // Show most relevant FAQ
+            const faqEntries = Object.entries(details.faq).slice(0, 2);
+            content += `\n\n**Common questions:**\n${faqEntries.map(([q, a]) => `**Q:** ${q}\n**A:** ${a}`).join('\n\n')}`;
+        }
+
+        // Add specific technical details if available
+        if (details.sortOptions) {
+            content += `\n\n**Sort options:** ${details.sortOptions.join(', ')}`;
+        }
+        if (details.filterCategories) {
+            content += `\n\n**Filter categories:** ${details.filterCategories.join(', ')}`;
+        }
+        if (details.swipeGestures) {
+            content += `\n\n**Swipe gestures:** Files - left swipe: ${details.swipeGestures.files_left_to_right.join(', ')}`;
+        }
+        if (details.permissionLevels) {
+            content += `\n\n**Permission levels:** ${Object.entries(details.permissionLevels).map(([level, desc]) => `${level}: ${desc}`).join(', ')}`;
+        }
+        if (details.durationOptions) {
+            content += `\n\n**Duration options:** ${Object.entries(details.durationOptions).map(([duration, desc]) => `${duration}: ${desc}`).join(', ')}`;
+        }
+
+        const responseStyle = this.contentManager.getResponseStyle(response.key || 'general');
+        return this.personality.wrapWithPersonality(content, responseStyle);
     }
 
     async callAIForConversation(prompt) {

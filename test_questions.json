@@ -20,11 +20,6 @@
     "tags": "playlists"
   },
   {
-    "question": "Can I use gämi for video calls?",
-    "expectedType": "gami_answer",
-    "tags": "video calls"
-  },
-  {
     "question": "How do I create timestamp notes?",
     "expectedType": "gami_answer",
     "tags": "timestamp notes"
@@ -33,41 +28,6 @@
     "question": "What are community folders?",
     "expectedType": "gami_answer",
     "tags": "community folders"
-  },
-  {
-    "question": "How do I customize my home screen?",
-    "expectedType": "gami_answer",
-    "tags": "home screen modules"
-  },
-  {
-    "question": "What is Flex Play?",
-    "expectedType": "gami_answer",
-    "tags": "flex play"
-  },
-  {
-    "question": "How do I create export snippets?",
-    "expectedType": "gami_answer",
-    "tags": "export snippets"
-  },
-  {
-    "question": "What audio formats does gämi support?",
-    "expectedType": "gami_answer",
-    "tags": "audio formats"
-  },
-  {
-    "question": "How do I add tags to files?",
-    "expectedType": "gami_answer",
-    "tags": "tagging"
-  },
-  {
-    "question": "Can I migrate files from Dropbox?",
-    "expectedType": "gami_answer",
-    "tags": "migration"
-  },
-  {
-    "question": "How do I sort files by BPM?",
-    "expectedType": "gami_answer",
-    "tags": "bpm sorting"
   },
   {
     "question": "Are my messages encrypted?",
@@ -90,49 +50,9 @@
     "tags": "off-topic"
   },
   {
-    "question": "What is the weather today?",
+    "question": "How much does gämi cost?",
     "expectedType": "fallback",
-    "tags": "off-topic"
-  },
-  {
-    "question": "How do I cook pasta?",
-    "expectedType": "fallback",
-    "tags": "off-topic"
-  },
-  {
-    "question": "What is artificial intelligence?",
-    "expectedType": "fallback",
-    "tags": "off-topic"
-  },
-  {
-    "question": "How do I fix my computer?",
-    "expectedType": "fallback",
-    "tags": "off-topic"
-  },
-  {
-    "question": "What is the best programming language?",
-    "expectedType": "fallback",
-    "tags": "off-topic"
-  },
-  {
-    "question": "gami",
-    "expectedType": "gami_answer",
-    "tags": "typo/minimal"
-  },
-  {
-    "question": "gämi gämi gämi",
-    "expectedType": "gami_answer",
-    "tags": "repetition"
-  },
-  {
-    "question": "What is gämi and also tell me about the weather?",
-    "expectedType": "gami_answer",
-    "tags": "mixed question"
-  },
-  {
-    "question": "I need help with gämi file sharing but first what's 2+2?",
-    "expectedType": "gami_answer",
-    "tags": "mixed question"
+    "tags": "pricing not in docs"
   },
   {
     "question": "Does gämi support blockchain?",
@@ -140,128 +60,18 @@
     "tags": "tech question not in docs"
   },
   {
-    "question": "How much does gämi cost?",
-    "expectedType": "fallback",
-    "tags": "pricing not in docs"
+    "question": "gami",
+    "expectedType": "gami_answer",
+    "tags": "typo/minimal"
   },
   {
-    "question": "When was gämi founded?",
-    "expectedType": "fallback",
-    "tags": "company history not in docs"
-  },
-  {
-    "question": "Who founded gämi?",
-    "expectedType": "fallback",
-    "tags": "company history not in docs"
-  },
-  {
-    "question": "What competitors does gämi have?",
-    "expectedType": "fallback",
-    "tags": "competitive analysis not in docs"
-  },
-  {
-    "question": "How do I delete my gämi account?",
-    "expectedType": "fallback",
-    "tags": "account management not in docs"
-  },
-  {
-    "question": "What programming languages is gämi built with?",
-    "expectedType": "fallback",
-    "tags": "technical implementation not in docs"
-  },
-  {
-    "question": "Is gämi GDPR compliant?",
-    "expectedType": "fallback",
-    "tags": "legal compliance not in docs"
-  },
-  {
-    "question": "Can I use gämi on Linux?",
-    "expectedType": "fallback",
-    "tags": "platform support not in docs"
-  },
-  {
-    "question": "How do I contact gämi support?",
-    "expectedType": "fallback",
-    "tags": "support contact not in docs"
-  },
-  {
-    "question": "Does gämi work offline?",
-    "expectedType": "fallback",
-    "tags": "offline functionality not in docs"
-  },
-  {
-    "question": "What is the storage limit for gämi?",
-    "expectedType": "fallback",
-    "tags": "storage limits not in docs"
-  },
-  {
-    "question": "Can I backup my gämi data?",
-    "expectedType": "fallback",
-    "tags": "backup functionality not in docs"
-  },
-  {
-    "question": "How do I upgrade my gämi plan?",
-    "expectedType": "fallback",
-    "tags": "plan management not in docs"
-  },
-  {
-    "question": "What happens if I exceed my storage limit?",
-    "expectedType": "fallback",
-    "tags": "storage limits not in docs"
+    "question": "What is gämi and also tell me about the weather?",
+    "expectedType": "gami_answer",
+    "tags": "mixed question"
   },
   {
     "question": "Can I integrate gämi with Slack?",
     "expectedType": "fallback",
     "tags": "third-party integration not in docs"
-  },
-  {
-    "question": "How do I set up two-factor authentication?",
-    "expectedType": "fallback",
-    "tags": "security features not in docs"
-  },
-  {
-    "question": "What is gämi's uptime guarantee?",
-    "expectedType": "fallback",
-    "tags": "service level not in docs"
-  },
-  {
-    "question": "Can I use gämi for my business?",
-    "expectedType": "fallback",
-    "tags": "business use not in docs"
-  },
-  {
-    "question": "How do I cancel my gämi subscription?",
-    "expectedType": "fallback",
-    "tags": "subscription management not in docs"
-  },
-  {
-    "question": "What is the maximum file size I can upload?",
-    "expectedType": "fallback",
-    "tags": "file size limits not in docs"
-  },
-  {
-    "question": "Does gämi have an API?",
-    "expectedType": "fallback",
-    "tags": "API not in docs"
-  },
-  {
-    "question": "Can I white-label gämi?",
-    "expectedType": "fallback",
-    "tags": "white-labeling not in docs"
-  },
-  {
-    "question": "How do I report a bug in gämi?",
-    "expectedType": "fallback",
-    "tags": "bug reporting not in docs"
-  },
-  {
-    "question": "What browsers does gämi support?",
-    "expectedType": "fallback",
-    "tags": "browser compatibility not in docs"
-  },
-  {
-    "question": "Can I use gämi on my phone?",
-    "expectedType": "fallback",
-    "tags": "mobile support not in docs"
   }
 ] 

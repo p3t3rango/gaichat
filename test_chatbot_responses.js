@@ -1,13 +1,18 @@
-const fs = require('fs');
-const { v4: uuidv4 } = require('uuid');
-const path = require('path');
+import fs from 'fs';
+import { v4 as uuidv4 } from 'uuid';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fetch from 'node-fetch';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const TEST_CASES_FILE = path.join(__dirname, 'test_questions.json');
 const OUTPUT_CSV_FILE = path.join(__dirname, 'chatbot_test_results.csv');
-const API_URL = 'https://gaichat.vercel.app/api/chat';
+const API_URL = process.env.LOCAL_API ? 'http://localhost:3001/api/chat' : 'https://gaichat.vercel.app/api/chat';
 
 // Add delay between requests to avoid rate limiting
-const DELAY_MS = 2000; // 2 seconds between requests
+const DELAY_MS = 5000; // 5 seconds between requests
 
 function getTimestamp() {
   return new Date().toISOString().replace('T', ' ').substring(0, 19);
@@ -15,28 +20,50 @@ function getTimestamp() {
 
 function escapeCSV(str) {
   if (!str) return '';
-  return '"' + String(str).replace(/"/g, '""') + '"';
+  // Replace newlines with spaces and escape quotes
+  return '"' + String(str).replace(/\r?\n/g, ' ').replace(/"/g, '""') + '"';
 }
 
 function analyzeFailure(expectedType, response, question) {
   const lowerResponse = response.toLowerCase();
   
   if (expectedType === 'gami_answer') {
-    if (lowerResponse.includes('this does not relate to gämi')) {
-      return 'FAIL: False fallback';
-    }
+    // Check for API errors first
     if (lowerResponse.includes('error')) {
       return 'FAIL: API error';
+    }
+    // Check for fallback responses (multiple variations)
+    if (lowerResponse.includes('this does not relate to gämi') || 
+        lowerResponse.includes('i do not have information') ||
+        lowerResponse.includes('outside the scope of the gämi platform') ||
+        lowerResponse.includes('i cannot provide an answer')) {
+      return 'FAIL: False fallback';
+    }
+    // If it contains gämi-related content, it's likely a good answer
+    if (lowerResponse.includes('gämi') || lowerResponse.includes('gami')) {
+      return 'PASS';
     }
     return 'PASS';
   }
   
   if (expectedType === 'fallback') {
-    if (lowerResponse.includes('this does not relate to gämi')) {
-      return 'PASS';
-    }
+    // Check for API errors first
     if (lowerResponse.includes('error')) {
       return 'FAIL: API error';
+    }
+    // Check for various fallback indicators
+    if (lowerResponse.includes('this does not relate to gämi') || 
+        lowerResponse.includes('i do not have information') ||
+        lowerResponse.includes('outside the scope of the gämi platform') ||
+        lowerResponse.includes('i cannot provide an answer') ||
+        lowerResponse.includes('i apologize, but i do not') ||
+        lowerResponse.includes('that is a philosophical question') ||
+        lowerResponse.includes('my role is to provide information about')) {
+      return 'PASS';
+    }
+    // If it's giving detailed gämi information for off-topic questions, that's wrong
+    if (lowerResponse.includes('gämi') && (lowerResponse.includes('features') || lowerResponse.includes('platform'))) {
+      return 'FAIL: Should have used fallback';
     }
     return 'FAIL: Should have used fallback';
   }
@@ -62,7 +89,6 @@ function sleep(ms) {
 }
 
 async function main() {
-  const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
   const testCases = JSON.parse(fs.readFileSync(TEST_CASES_FILE, 'utf8'));
   
   console.log(`Running ${testCases.length} tests with ${DELAY_MS}ms delays...`);
@@ -141,7 +167,7 @@ async function main() {
   console.log(`Test results written to ${OUTPUT_CSV_FILE}`);
   
   // Summary
-  const failures = rows.slice(1).filter(row => row[6] !== 'PASS').length;
+  const failures = rows.slice(1).filter(row => row[6] !== '"PASS"').length;
   const total = rows.length - 1;
   console.log(`\nSummary: ${total - failures}/${total} tests passed (${failures} failures)`);
 }

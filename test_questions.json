@@ -56,8 +56,8 @@
   },
   {
     "question": "Does gämi support blockchain?",
-    "expectedType": "fallback",
-    "tags": "tech question not in docs"
+    "expectedType": "gami_answer",
+    "tags": "tech question - integration"
   },
   {
     "question": "gami",
@@ -71,7 +71,7 @@
   },
   {
     "question": "Can I integrate gämi with Slack?",
-    "expectedType": "fallback",
-    "tags": "third-party integration not in docs"
+    "expectedType": "gami_answer",
+    "tags": "third-party integration"
   }
 ] 

@@ -51,8 +51,8 @@
   },
   {
     "question": "How much does gämi cost?",
-    "expectedType": "fallback",
-    "tags": "pricing not in docs"
+    "expectedType": "gami_answer",
+    "tags": "pricing"
   },
   {
     "question": "Does gämi support blockchain?",

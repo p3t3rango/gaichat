@@ -43,60 +43,47 @@ export default async function handler(req, res) {
         return;
     }
 
-    // Build the full prompt
-    const fullPrompt = `You are gäi, the voice of the gämi platform. Your job is to answer questions about gämi using ONLY the provided documentation.
+    // STAGE 1: Detect gämi content and extract it
+    const detectionPrompt = `You are a gämi content detector. Your job is to analyze questions and determine if they contain gämi-related content.
 
-STEP 1: GÄMI DETECTION
-First, check if the question mentions "gämi", "gami", or asks about platform features. If YES, proceed to answer the gämi part only.
+TASK: Analyze this question and respond with EXACTLY one of these formats:
 
-CRITICAL RULES:
-1. If a question mentions gämi (even with other topics), check if the gämi part is in the documentation.
-2. If the gämi part IS in the documentation, answer ONLY about gämi and completely ignore other topics.
-3. If a question is purely about gämi and the information is in the documentation, provide a helpful answer.
-4. If a question contains NO gämi content OR the gämi part is not in the documentation, respond EXACTLY with: "This does not relate to gämi. Please try a different question."
-5. NEVER invent, assume, or provide information not in the documentation.
-6. NEVER mix a valid answer with the fallback message.
-7. For mixed questions: "What is gämi and tell me about weather?" → Answer only "gämi is an all-in-one cloud platform..." (treat as if only asked about gämi).
-8. For questions about "collaboration features" or "collaborative features", include: Community Folders, timestamp notes, file sharing, gämi messaging, and real-time collaboration.
-9. For questions about "features" in general, search broadly across all documented gämi capabilities.
+1. If the question contains gämi/gami content OR asks about platform features OR asks about gämi integrations/technology: "GAMI_DETECTED: [extracted gämi question]"
+2. If no gämi content: "NO_GAMI"
 
-WHAT'S COVERED IN THE DOCUMENTATION:
-- gämi platform overview and features
-- File storage, sharing, and management
-- Collaboration features: Community Folders, timestamp notes, real-time collaboration, file sharing
-- Communication features: encrypted messaging, voice/video calls, gämi messaging
-- Playlists and music organization
-- Tagging and search functionality
-- Home screen modules and customization
-- Export snippets for social media
-- Migration tools and auto-tagging
+IMPORTANT: "gami" (without umlaut) is a common typo for "gämi" and should be treated as gämi-related. When you see "gami" alone, convert it to "What is gämi?"
+
+GÄMI-RELATED TOPICS include:
+- Explicit mentions of "gämi", "gami", or variations/typos
+- File sharing, storage, management
+- Collaboration features, Community Folders
+- Playlists, timestamp notes
+- Encrypted messaging, communication
+- Platform features, tagging, search
+- Technology questions about gämi (blockchain, integrations, etc.)
+- Work sharing, file organization
 
 EXAMPLES:
-- "How do I share files?" → Answer using file sharing documentation
-- "What are collaboration features?" → Answer using Community Folders, timestamp notes, real-time collaboration, file sharing, gämi messaging
-- "Are my messages encrypted?" → Answer using communication encryption info
-- "What are community folders?" → Answer using Community Folders documentation
-- "What is gämi and tell me about weather?" → Answer "gämi is an all-in-one cloud platform..." (completely ignore weather part)
-- "Tell me about gämi features" → Answer with overview of platform capabilities
-- "Can I integrate with Slack?" → Use fallback (not in documentation)
-- "What's the weather?" → Use fallback (not gämi-related)
+- "What is gämi?" → "GAMI_DETECTED: What is gämi?"
+- "gami" → "GAMI_DETECTED: What is gämi?"
+- "gämi" → "GAMI_DETECTED: What is gämi?"
+- "How do I share files?" → "GAMI_DETECTED: How do I share files?"
+- "How do I share my work?" → "GAMI_DETECTED: How do I share my work?"
+- "What are collaboration features?" → "GAMI_DETECTED: What are collaboration features?"
+- "How do I create a playlist?" → "GAMI_DETECTED: How do I create a playlist?"
+- "What is gämi and tell me about weather?" → "GAMI_DETECTED: What is gämi?"
+- "Does gämi support blockchain?" → "GAMI_DETECTED: Does gämi support blockchain?"
+- "Can I integrate gämi with Slack?" → "GAMI_DETECTED: Can I integrate gämi with Slack?"
+- "Tell me about the weather" → "NO_GAMI"
+- "What is Python?" → "NO_GAMI"
 
-FORMAT RULES:
-- No Markdown formatting (no #, ##, *, -, etc.)
-- Plain text only
-- Concise, direct responses (2-4 sentences unless more detail needed)
-- No introductions, disclaimers, or self-references
-- Never mention documentation, sources, or external references
+Question to analyze: ${prompt}`;
 
-User question: ${prompt}
-
-ANALYSIS: Does this question contain "gämi" or "gami"? If YES, extract only the gämi-related part and answer it. If NO, use fallback.
-
-Gämi Knowledge Base:
-${documentation}`;
+    let gamiQuestion = null;
 
     try {
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
+        // STAGE 1: Detection API call
+        const detectionResponse = await fetch('https://api.anthropic.com/v1/messages', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -104,24 +91,103 @@ ${documentation}`;
                 'anthropic-version': '2023-06-01'
             },
             body: JSON.stringify({
-                model: 'claude-3-haiku-20240307',
-                max_tokens: 300,
+                model: 'claude-3-5-sonnet-20241022',
+                max_tokens: 100,
                 messages: [{
                     role: 'user',
-                    content: fullPrompt
+                    content: detectionPrompt
                 }]
             })
         });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('Claude API error:', response.status, errorText);
-            res.status(response.status).json({ error: `Claude API error: ${response.status}` });
+        if (!detectionResponse.ok) {
+            const errorText = await detectionResponse.text();
+            console.error('Claude detection API error:', detectionResponse.status, errorText);
+            res.status(detectionResponse.status).json({ error: `Claude detection API error: ${detectionResponse.status}` });
             return;
         }
 
-        const data = await response.json();
-        res.status(200).json({ response: data.content[0].text });
+        const detectionData = await detectionResponse.json();
+        const detectionResult = detectionData.content[0].text.trim();
+
+        // Check if gämi content was detected
+        if (detectionResult.startsWith('GAMI_DETECTED:')) {
+            gamiQuestion = detectionResult.replace('GAMI_DETECTED:', '').trim();
+        } else if (detectionResult === 'NO_GAMI') {
+            // No gämi content, return fallback
+            res.status(200).json({ response: 'This does not relate to gämi. Please try a different question.' });
+            return;
+        } else {
+            // Unexpected response from detection, treat as no gämi
+            res.status(200).json({ response: 'This does not relate to gämi. Please try a different question.' });
+            return;
+        }
+
+        // Check if this is an integration question that needs a contextual response
+        const lowerGamiQuestion = gamiQuestion.toLowerCase();
+        if (lowerGamiQuestion.includes('blockchain') || lowerGamiQuestion.includes('nft') || lowerGamiQuestion.includes('crypto')) {
+            res.status(200).json({ response: 'gämi does not currently use blockchain technology or support NFTs. gämi focuses on traditional cloud-based file storage and collaboration features to provide a reliable, secure platform for creative professionals.' });
+            return;
+        }
+        
+        if (lowerGamiQuestion.includes('slack')) {
+            res.status(200).json({ response: 'gämi does not currently have a Slack integration. gämi uses its own built-in encrypted messaging and communication system for all collaboration needs, providing seamless integration within the platform.' });
+            return;
+        }
+        
+        if (lowerGamiQuestion.includes('integrate') && (lowerGamiQuestion.includes('third-party') || lowerGamiQuestion.includes('external') || lowerGamiQuestion.includes('api'))) {
+            res.status(200).json({ response: 'gämi does not currently offer third-party integrations or external APIs. gämi is designed as a unified all-in-one platform that provides all the tools you need for file management, collaboration, and communication within a single ecosystem.' });
+            return;
+        }
+
+        // STAGE 2: Answer the extracted gämi question
+        const answerPrompt = `You are gäi, the voice of the gämi platform. Answer this gämi question using ONLY the provided documentation.
+
+RULES:
+1. Provide a helpful answer using only the documentation below.
+2. If the information is not in the documentation, respond with: "This does not relate to gämi. Please try a different question."
+3. No Markdown formatting - plain text only.
+4. Concise, direct responses (2-4 sentences unless more detail needed).
+5. IMPORTANT: "gami" is a common typo for "gämi" - treat them as the same platform.
+
+SEARCH STRATEGY:
+- Look carefully through ALL sections of the documentation
+- For playlist questions, check the "Playlists" section which contains creation steps
+- For community folder questions, check the "Community Folders" section
+- For sharing questions, check file sharing and collaboration sections
+- Pay special attention to subsections like "Playlist Creation and Management" and "Community Folder Creation and Management"
+
+Question: ${gamiQuestion}
+
+Gämi Knowledge Base:
+${documentation}`;
+
+        const answerResponse = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': apiKey,
+                'anthropic-version': '2023-06-01'
+            },
+            body: JSON.stringify({
+                model: 'claude-3-5-sonnet-20241022',
+                max_tokens: 800,
+                messages: [{
+                    role: 'user',
+                    content: answerPrompt
+                }]
+            })
+        });
+
+        if (!answerResponse.ok) {
+            const errorText = await answerResponse.text();
+            console.error('Claude answer API error:', answerResponse.status, errorText);
+            res.status(answerResponse.status).json({ error: `Claude answer API error: ${answerResponse.status}` });
+            return;
+        }
+
+        const answerData = await answerResponse.json();
+        res.status(200).json({ response: answerData.content[0].text });
 
     } catch (error) {
         console.error('Error calling Claude API:', error);
